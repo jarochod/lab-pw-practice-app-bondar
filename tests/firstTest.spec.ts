@@ -2,28 +2,37 @@ import { test } from "@playwright/test";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("http://localhost:4200/");
+  await page.getByText("Forms").click();
+  await page.getByText("Form Layouts").click();
 });
 
-test.describe("suite-1", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.getByText("Charts", { exact: true }).click();
-  });
+test("Locator syntax rules", async ({ page }) => {
+  // by Tag name
+  await page.locator("input").first().click();
 
-  test("suite-1 | navigate to Echarts page", async ({ page }) => {
-    await page.getByText("Echarts").click();
-  });
-});
+  // by ID
+  page.locator("#inputEmail1");
 
-test.describe("suite-2", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.getByText("Forms").click();
-  });
+  // by Class value
+  page.locator(".shape-rectangle");
 
-  test("suite-2 | the first test", async ({ page }) => {
-    await page.getByText("Form Layouts").click();
-  });
+  // by atribute
+  page.locator('[placeholder="Email"]');
 
-  test("suite-2 | navigate to datepicker page", async ({ page }) => {
-    await page.getByText("Datepicker").click();
-  });
+  // by Class value (full)
+  page.locator(
+    '[class="input-full-width size-medium status-basic shape-rectangle nb-transition"]',
+  );
+
+  // combine different selectors
+  page.locator('input[placeholder="Email"]');
+
+  // by XPath (NOT RECOMMENDED)
+  page.locator('//*[@id="inputEmail1"]');
+
+  // by partial text match
+  page.locator(':text("Using")');
+
+  // by exact text match
+  page.locator(':text-is("Using the Grid")');
 });
