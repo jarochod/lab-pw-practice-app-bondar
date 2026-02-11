@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { filter } from "rxjs-compat/operator/filter";
 
 test.beforeEach(async ({ page }) => {
@@ -56,7 +56,7 @@ test("User facing locators", async ({ page }) => {
 });
 
 // s4-ch26 | 26. Child Elements
-test("locating child elements", async ({ page }) => {
+test("Locating child elements", async ({ page }) => {
   await page.locator('nb-card nb-radio :text-is("Option 1")').click();
   await page
     .locator("nb-card")
@@ -74,7 +74,7 @@ test("locating child elements", async ({ page }) => {
 });
 
 // s4-ch27 | 27. Parent Elements
-test("locating parent elements", async ({ page }) => {
+test("Locating parent elements", async ({ page }) => {
   await page
     .locator("nb-card", { hasText: "Using the Grid" })
     .getByRole("textbox", { name: "Email" })
@@ -109,4 +109,18 @@ test("locating parent elements", async ({ page }) => {
     .locator("..")
     .getByRole("textbox", { name: "Email" })
     .click();
+});
+
+// s4-ch28 | 28. Reusing Locators
+test("Reusing the locators", async ({ page }) => {
+  const basicForm = page.locator("nb-card").filter({ hasText: "Basic form" });
+  const emailField = basicForm.getByRole("textbox", { name: "Email" });
+  const passwordField = basicForm.getByRole("textbox", { name: "Password" });
+
+  await emailField.fill("test@test.com");
+  await passwordField.fill("Welcome123");
+  await basicForm.locator("nb-checkbox").click();
+  await basicForm.getByRole("button", { name: "SUBMIT" }).click();
+
+  await expect(emailField).toHaveValue("test@test.com");
 });
