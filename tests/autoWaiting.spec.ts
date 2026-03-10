@@ -1,9 +1,12 @@
 // s4-ch31 | 31. Auto-Waiting
 import { expect, test } from "@playwright/test";
 
-test.beforeEach(async ({ page }) => {
+test.beforeEach(async ({ page }, testInfo) => {
   await page.goto("http://uitestingplayground.com/ajax");
   await page.getByText("Button Triggering AJAX Request").click();
+
+  // Extend test timeout by 2 seconds to handle potential network latency
+  testInfo.setTimeout(testInfo.timeout + 2000);
 });
 
 test("Auto waiting", async ({ page }) => {
@@ -45,4 +48,20 @@ test("Alternative waits", async ({ page }) => {
 
   const text_all = await successButton.allTextContents();
   expect(text_all).toContain("Data loaded with AJAX get request.");
+});
+
+// s4-ch32 | 32. Timeouts
+test("Timeouts", async ({ page }) => {
+  // Manually set test-level timeout
+  // test.setTimeout(16500);
+
+  // Triple the default test timeout (useful for debugging/slow environments)
+  test.slow();
+
+  const successButton = page.locator(".bg-success");
+
+  // Override action-level timeout for this specific click
+  // await successButton.click({timeout: 16000});
+
+  await successButton.click();
 });
