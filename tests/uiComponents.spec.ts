@@ -58,5 +58,30 @@ test.describe("Form Layouts page", () => {
     expect(await usingTheGridForm.getByRole("radio", { name: "Option 1" }).isChecked()).toBeFalsy();
     expect(await usingTheGridForm.getByRole("radio", { name: "Option 2" }).isChecked()).toBeTruthy();
   });
+});
 
+// s5-ch35 | 35. Checkboxes
+test("checkboxes", async ({ page }) => {
+  await page.getByText("Modal & Overlays").click();
+  await page.getByText("Toastr").click();
+
+  // click() toggles the checkbox; force: true bypasses actionability checks
+  // await page.getByRole("checkbox", { name: "Hide on click" }).click({ force: true });
+
+  // check() ensures the checkbox is selected;
+  // await page.getByRole("checkbox", { name: "Hide on click" }).check({ force: true });
+
+  // uncheck() ensures it is deselected
+  await page.getByRole("checkbox", { name: "Hide on click" }).uncheck({ force: true });
+
+  // Selecting a specific checkbox by its role and name
+  await page.getByRole("checkbox", { name: "Prevent arising of duplicate toast" }).check({ force: true });
+
+  // Iterating through all checkboxes on the page
+  const allBoxes = await page.getByRole("checkbox");
+  for (const box of await allBoxes.all()) {
+    await box.uncheck({ force: true });
+    // Verify that the checkbox is unchecked
+    expect(await box.isChecked()).toBeFalsy();
+  }
 });
