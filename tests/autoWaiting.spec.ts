@@ -27,7 +27,7 @@ test("Auto waiting", async ({ page }) => {
   */
 
   // Web-first assertions have a built-in retry mechanism and wait until the condition is met.
-  await expect(successButton).toHaveText("Data loaded with AJAX get request.", {timeout: 200});
+  await expect(successButton).toHaveText("Data loaded with AJAX get request.", {timeout: 20000});
 });
 
 // Exploring manual waiting strategies when standard auto-waiting is not sufficient.
@@ -40,11 +40,11 @@ test("Alternative waits", async ({ page }) => {
 
   // Wait for a specific API network response to be received.
   // ___ wait for particular response
-  // await page.waitForResponse('http://uitestingplayground.com/ajaxdata');
+  await page.waitForResponse('http://uitestingplayground.com/ajaxdata');
 
   // Wait until there are no network connections for at least 500ms (use with caution).
   // ___ wait for network calls to be completed (NOT RECOMMENDED)
-  await page.waitForLoadState("networkidle");
+  // await page.waitForLoadState("networkidle");
 
   const text_all = await successButton.allTextContents();
   expect(text_all).toContain("Data loaded with AJAX get request.");

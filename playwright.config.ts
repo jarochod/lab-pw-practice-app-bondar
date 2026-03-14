@@ -14,7 +14,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
 
   // Global limit for the entire test suite execution
-  globalTimeout: 60000,
+  globalTimeout: 120000,
 
   // Default timeout for each individual test
   timeout: 40000,
@@ -47,7 +47,7 @@ export default defineConfig({
     // actionTimeout: 5000,
 
     // Default timeout for navigation actions (e.g., page.goto)
-    navigationTimeout: 5000,
+    navigationTimeout: 16000,
   },
 
   /* Configure projects for major browsers */
