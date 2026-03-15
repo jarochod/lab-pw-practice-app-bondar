@@ -85,3 +85,79 @@ test("checkboxes", async ({ page }) => {
     expect(await box.isChecked()).toBeFalsy();
   }
 });
+
+// s5-ch36 | 36. Lists and Dropdowns
+test("lists and dropdowns", async ({ page }) => {
+  // Locate the dropdown component in the header (the trigger element)
+  const dropDownsMenu = page.locator("ngx-header nb-select");
+
+  // OPTIONAL: Initial click if you want to perform a standalone action before the loop
+  await dropDownsMenu.click();
+
+  // REMINDER: getByRole is best for standard HTML elements
+  // page.getByRole("list"); // Use this when the list is built with a <ul> tag
+  // page.getByRole("listitem"); // Use this when the list is built with <li> tags
+
+  // DIFFERENT APPROACHES:
+  // const optionList = page.getByRole("list").locator("nb-option"); // Chaining locator with role
+  const optionList = page.locator("nb-option-list nb-option"); // Direct locator for the custom Nebular option list
+
+  // ASSERTION EXAMPLES:
+  // Check if the list contains all expected values at once
+  await expect(optionList).toHaveText(["Light", "Dark", "Cosmic", "Corporate"]);
+
+  // Single interaction example
+  await optionList.filter({ hasText: "Cosmic"}).click();
+
+  const header = page.locator("nb-layout-header");
+
+  // ASSERTION EXAMPLE: Checking specific CSS property value
+  await expect(header).toHaveCSS("background-color", "rgb(50, 50, 89)");
+
+
+  // Data for the test loop: theme name as key, expected RGB color as value
+  const colors = {
+    Light: "rgb(255, 255, 255)",
+    Dark: "rgb(34, 43, 69)",
+    Cosmic: "rgb(50, 50, 89)",
+    Corporate: "rgb(255, 255, 255)",
+  };
+
+  // LOOP: Iterate through the colors object to test each theme automatically
+  for (const color in colors) {
+    // 1. Open the dropdown menu
+    await dropDownsMenu.click();
+
+    // 2. Select the option by filtering through the list using the current color name
+    await optionList.filter({ hasText: color }).click();
+
+    // 3. Verify if the header background color changed to the correct RGB value
+    await expect(header).toHaveCSS("background-color", colors[color]);
+  }
+});
+
+// s5-ch37 | 37. Tooltips
+test("tooltips", async ({ page }) => {
+  // Navigate to the specific section in the application
+  await page.getByText("Modal & Overlays").click();
+  await page.getByText("Tooltip").click();
+
+  // Locate the card container that holds the tooltip buttons
+  const toolTipCard = page.locator("nb-card", {hasText: "Tooltip Placements"});
+
+  // Simulate mouse hover over the button to trigger the tooltip
+  await toolTipCard.getByRole("button", {name: "Top"}).hover();
+
+  // Locate the tooltip using ARIA role (if defined in the HTML)
+  // page.getByRole("tooltip");
+
+  // Method 1: Generic Assertion (fetching text to a variable)
+  // Extracting text content manually from the nb-tooltip element
+  const tooltip_txt = await page.locator("nb-tooltip").textContent();
+  expect(tooltip_txt).toEqual("This is a tooltip");
+
+  // Method 2: Locator Assertion (Web-First) - RECOMMENDED
+  // Playwright automatically waits for the element to appear and match the text
+  const tooltip = page.locator("nb-tooltip");
+  await expect(tooltip).toHaveText("This is a tooltip");
+});
