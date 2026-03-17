@@ -161,3 +161,52 @@ test("tooltips", async ({ page }) => {
   const tooltip = page.locator("nb-tooltip");
   await expect(tooltip).toHaveText("This is a tooltip");
 });
+
+// s5-ch38 | 38. Dialog Boxes - page.on version (Listener)
+test("dialog box", async ({ page }) => {
+  await page.getByText("Tables & Data").click();
+  await page.getByText("Smart Table").click();
+
+  /**
+   * EVENT LISTENER REGISTRATION:
+   * We tell Playwright: "Whenever a dialog box appears from now on, execute this block".
+   * This must be defined BEFORE the action that triggers the dialog (the click).
+   */
+  page.on("dialog", dialog => {
+    // Verify if the dialog message text is correct
+    expect(dialog.message()).toEqual("Are you sure you want to delete?");
+    // Perform the "OK" action on the browser dialog
+    dialog.accept();
+  });
+
+  // This action triggers the native browser dialog
+  await page.getByRole("table").locator("tr", {hasText: "mdo@gmail.com"})
+    .locator(".nb-trash").click();
+
+  // Verify that the row with the email address was successfully removed
+  await expect(page.locator("table tr").first()).not.toHaveText("mdo@gmail.com");
+});
+
+// s5-ch38 | 38. Dialog Boxes - waitForEvent version (Promise)
+test("dialog box with waitForEvent", async ({ page }) => {
+  await page.getByText("Tables & Data").click();
+  await page.getByText("Smart Table").click();
+
+  // 1. Initialize a Promise to wait for the dialog event.
+  // Don't use 'await' here yet, or the test will hang before the click.
+  const dialogPromise = page.waitForEvent("dialog");
+
+  // 2. Perform the action that triggers the native browser dialog.
+  await page.getByRole("table").locator("tr", {hasText: "mdo@gmail.com"})
+    .locator(".nb-trash").click();
+
+  // 3. Wait for the Promise to resolve and capture the dialog object.
+  const dialog = await dialogPromise;
+
+  // 4. Verify the message text and accept (click OK).
+  expect(dialog.message()).toEqual("Are you sure you want to delete?");
+  await dialog.accept();
+
+  // 5. Verify that the row was successfully removed from the table.
+  await expect(page.locator("table tr").first()).not.toHaveText("mdo@gmail.com");
+});
