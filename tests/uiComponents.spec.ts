@@ -210,3 +210,35 @@ test("dialog box with waitForEvent", async ({ page }) => {
   // 5. Verify that the row was successfully removed from the table.
   await expect(page.locator("table tr").first()).not.toHaveText("mdo@gmail.com");
 });
+
+// s5-ch39 | 39. Web Tables (Part 1)
+test("web tables", async ({ page }) => {
+  await page.getByText("Tables & Data").click();
+  await page.getByText("Smart Table").click();
+
+  // 1. Get the row by any text present in that row
+  const targetRow = page.getByRole("row", { name: "twitter@outlook.com" });
+  await targetRow.locator(".nb-edit").click(); // Scoped locator: clicks edit only within this row
+
+  // Targeting the editor input by placeholder and updating value
+  await page.locator("input-editor").getByPlaceholder("Age").clear();
+  await page.locator("input-editor").getByPlaceholder("Age").fill("35");
+  await page.locator(".nb-checkmark").click(); // Click confirm/checkmark icon
+
+  // 2. Get the row based on a value in a specific column (more precise)
+  await page.locator(".ng2-smart-pagination-nav").getByText("2").click();
+
+  // Locate row with text "11" AND ensure the 2nd column (index 1) actually contains "11"
+  const targetRowById = page.getByRole("row", { name: "11" }).filter({
+    has: page.locator("td").nth(1).getByText("11")
+  });
+
+  await targetRowById.locator(".nb-edit").click();
+  await page.locator("input-editor").getByPlaceholder("E-mail").clear();
+  await page.locator("input-editor").getByPlaceholder("E-mail").fill("test@test.com");
+  await page.locator(".nb-checkmark").click();
+
+  // Assertion: Verify that the 6th column (index 5) displays the updated email
+  await expect(targetRowById.locator("td").nth(5)).toHaveText("test@test.com");
+});
+
