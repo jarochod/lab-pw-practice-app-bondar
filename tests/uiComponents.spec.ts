@@ -240,5 +240,40 @@ test("web tables", async ({ page }) => {
 
   // Assertion: Verify that the 6th column (index 5) displays the updated email
   await expect(targetRowById.locator("td").nth(5)).toHaveText("test@test.com");
+
+
+// s5-ch40 | 40. Web Tables (Part 2)
+  // 3. Define an array of age values to test the table filter functionality
+  const ages = ["20", "30", "40", "200"];
+
+  for (let age of ages) {
+    // Locate the filter input by its placeholder, clear existing value and type new age
+    await page.locator("input-filter").getByPlaceholder("Age").clear();
+    await page.locator("input-filter").getByPlaceholder("Age").fill(age);
+
+    // Wait for the table to filter the data (handling the UI debounce)
+    await page.waitForTimeout(500);
+
+    // Get all rows currently visible in the table body
+    const ageRows = page.locator("tbody tr");
+
+    // Iterate through each row returned by the locator
+    for(let row of await ageRows.all()){
+      // Get the text from the last cell (Age column)
+      const cellValue = await row.locator("td").last().textContent();
+
+      if (age === "200"){
+        // If age is "200", we expect no results and a specific empty state message
+        expect(await page.getByRole("table").textContent()).toContain("No data found");
+      } else {
+        // Otherwise, verify that the row's age matches the applied filter
+        expect(cellValue).toEqual(age);
+      }
+    }
+  }
 });
+
+
+
+
 
