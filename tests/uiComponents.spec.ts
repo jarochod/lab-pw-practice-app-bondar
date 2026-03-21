@@ -273,6 +273,25 @@ test("web tables", async ({ page }) => {
   }
 });
 
+// s5-ch41 | 41. Date Picker (Part 1)
+test("datepicker", async ({ page }) => {
+  await page.getByText("Forms").click();
+  await page.getByText("Datepicker").click();
+
+  const calendarInputField = page.getByPlaceholder("Form Picker");
+  await calendarInputField.click();
+
+  // NOT RECOMMENDED: [class="..."] fails if the day has the 'today' class added
+  // await page.locator('[class="day-cell ng-star-inserted"]').getByText("1", {exact: true}).click();
+
+  // RECOMMENDED: Select day cell while ignoring adjacent month days (.bounding-month)
+  // Dot notation (.) ensures the element is found even with extra classes like 'today'
+  await page.locator(".day-cell:not(.bounding-month)").getByText("21", {exact: true}).click();
+
+  // Assertion to verify that the input value matches the selected date
+  await expect(calendarInputField).toHaveValue("Mar 21, 2026");
+});
+
 
 
 
