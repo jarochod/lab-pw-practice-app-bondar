@@ -274,6 +274,7 @@ test("web tables", async ({ page }) => {
 });
 
 // s5-ch41 | 41. Date Picker (Part 1)
+// s5-ch42 | 42. Date Picker (Part 2)
 test("datepicker", async ({ page }) => {
   await page.getByText("Forms").click();
   await page.getByText("Datepicker").click();
@@ -281,18 +282,36 @@ test("datepicker", async ({ page }) => {
   const calendarInputField = page.getByPlaceholder("Form Picker");
   await calendarInputField.click();
 
+  // Create a date object and add 100 days to current date
+  let date = new Date();
+  date.setDate(date.getDate() + 10);
+
+  // Extract date components for selection and validation
+  const expectedDate = date.getDate().toString();
+  const expectedMonthShort = date.toLocaleString("En-US", {month: "short"});
+  const expectedMonthLong = date.toLocaleString("En-US", {month: "long"});
+  const expectedYear = date.getFullYear();
+  const dateToAssert = `${expectedMonthShort} ${expectedDate}, ${expectedYear}`;
+
+  // Read current month and year visible in the date picker
+  let calendarMonthAndYear = await page.locator("nb-calendar-view-mode").textContent();
+  const expectedMonthAndYear = ` ${expectedMonthLong} ${expectedYear} `;
+
+  // Loop to navigate through the calendar until the target month/year is reached
+  while(!calendarMonthAndYear.includes(expectedMonthAndYear)){
+    await page.locator('nb-calendar-pageable-navigation [data-name="chevron-right"]').click();
+    calendarMonthAndYear = await page.locator("nb-calendar-view-mode").textContent();
+  }
+
   // NOT RECOMMENDED: [class="..."] fails if the day has the 'today' class added
-  // await page.locator('[class="day-cell ng-star-inserted"]').getByText("1", {exact: true}).click();
+  // await page.locator('[class="day-cell ng-star-inserted"]').getByText(expectedDate, {exact: true}).click();
 
   // RECOMMENDED: Select day cell while ignoring adjacent month days (.bounding-month)
   // Dot notation (.) ensures the element is found even with extra classes like 'today'
-  await page.locator(".day-cell:not(.bounding-month)").getByText("21", {exact: true}).click();
+  await page.locator(".day-cell:not(.bounding-month)").getByText(expectedDate, {exact: true}).click();
 
   // Assertion to verify that the input value matches the selected date
-  await expect(calendarInputField).toHaveValue("Mar 21, 2026");
+  await expect(calendarInputField).toHaveValue(dateToAssert);
 });
-
-
-
 
 
