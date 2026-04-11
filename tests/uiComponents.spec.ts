@@ -314,4 +314,50 @@ test("datepicker", async ({ page }) => {
   await expect(calendarInputField).toHaveValue(dateToAssert);
 });
 
+// s5-ch43 | 43. Sliders
+test("sliders", async ({ page }) => {
+  /*
+  // --- Approach 1: Attribute Update (commented out) ---
+  // Fast but bypasses the UI layer - modifies the DOM directly.
+
+  const tempGauge = page.locator("[tabtitle='Temperature'] ngx-temperature-dragger circle");
+  const tempBox = page.locator("[tabtitle='Temperature'] ngx-temperature-dragger");
+
+  // Use .evaluate to run JS in the browser and change the coordinates of the circle
+  await tempGauge.evaluate( node => {
+     node.setAttribute("cx", "232.63098833543773");
+     node.setAttribute("cy", "232.63098833543773");
+  });
+
+  // Trigger a click to ensure the component registers the manual DOM change
+  await tempGauge.click();
+  await expect(tempBox).toContainText("30");
+*/
+  // --- Approach 2: Mouse movement ---
+  // Best practice for E2E - mimics a real user interaction.
+
+  const tempBox = page.locator("[tabtitle='Temperature'] ngx-temperature-dragger");
+
+  // Scroll the element into the viewport to make it interactable
+  await tempBox.scrollIntoViewIfNeeded();
+
+  // Retrieve the element's position and dimensions
+  const box = await tempBox.boundingBox();
+
+  // Calculate the center coordinates of the slider
+  const x = box.x + box.width / 2;
+  const y = box.y + box.height / 2;
+
+  // Execute the Drag-and-Drop sequence:
+  await page.mouse.move(x, y);       // Hover over the center
+  await page.mouse.down();            // Press mouse button
+  await page.mouse.move(x + 80, y);   // Move 80px to the right
+  await page.mouse.move(x + 80, y + 120); // Move 120px down
+  await page.mouse.up();              // Release mouse button
+
+  // Assert that the text value has updated correctly
+  await expect(tempBox).toContainText("30");
+});
+
+
 
