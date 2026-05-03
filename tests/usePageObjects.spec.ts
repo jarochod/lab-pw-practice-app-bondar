@@ -1,7 +1,7 @@
 import { test } from "@playwright/test";
-import { NavigationPage } from "../page-objects/NavigationPage";
-import { FormLayoutsPage } from "../page-objects/FormLayoutsPage";
-import { DatepickerPage } from "../page-objects/DatepickerPage";
+import { NavigationPage } from "../page-objects/navigationPage";
+import { FormLayoutsPage } from "../page-objects/formLayoutsPage";
+import { DatepickerPage } from "../page-objects/datepickerPage";
 
 // s6-ch46 | 46. First Page Object
 // s6-ch47 | 47. Navigation Page Object
