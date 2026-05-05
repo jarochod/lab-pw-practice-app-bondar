@@ -16,7 +16,6 @@ test("navigate to form page", async ({ page }) => {
   const pm = new PageManager(page);
   // Execute the navigation method
   await pm.navigateTo().formLayoutsPage();
-  await pm.navigateTo().formLayoutsPage();
   await pm.navigateTo().datepickerPage();
   await pm.navigateTo().smartTablePage();
   await pm.navigateTo().toastrPage();

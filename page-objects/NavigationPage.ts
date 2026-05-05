@@ -1,20 +1,21 @@
 import { Page } from "@playwright/test";
+import { HelperBase } from "./helperBase";
 
 // s6-ch46 | 46. First Page Object
 // s6-ch47 | 47. Navigation Page Object
 
-// Page Object class to handle main navigation links
-export class NavigationPage {
-  readonly page: Page;
-
+// Extends HelperBase to access shared page properties and utility methods
+export class NavigationPage extends HelperBase {
   constructor(page: Page) {
-    this.page = page;
+    // Passes the page object to the parent HelperBase class
+    super(page);
   }
 
   // Method to navigate to the Form Layouts section
   async formLayoutsPage() {
     await this.selectGroupMenuItem("Forms");
     await this.page.getByText("Form Layouts").click();
+    await this.waitForNumberOfSeconds(2);
   }
 
   async datepickerPage() {
@@ -63,4 +64,3 @@ export class NavigationPage {
     if (expandedState === "false") await groupMenuLink.click();
   }
 */
-

@@ -1,12 +1,13 @@
 import { Page } from "@playwright/test";
+import { HelperBase } from "./helperBase";
 
 // s6-ch49 | 49. Parametrized Methods
 
-export class FormLayoutsPage {
-  private readonly page: Page;
-
+// Extends HelperBase to access shared page properties and utility methods
+export class FormLayoutsPage extends HelperBase {
   constructor(page: Page) {
-    this.page = page;
+    // Passes the page object to the parent HelperBase class
+    super(page);
   }
 
   // Method to handle "Using the Grid" form with dynamic data
