@@ -187,7 +187,37 @@ test("dialog box", async ({ page }) => {
   await expect(page.locator("table tr").first()).not.toHaveText("mdo@gmail.com");
 });
 
+// s5-ch38 | 38. Dialog Boxes - Custom Promise Version (Bulletproof Solution)
+test("Dialog Box - Custom Promise (Bulletproof Solution)", async ({ page }) => {
+  await page.getByText("Tables & Data").click();
+  await page.getByText("Smart Table").click();
+
+  // 1. Create a custom Promise that resolves only when the listener finishes its job
+  const dialogHandled = new Promise<void>((resolve) => {
+    page.on('dialog', async (dialog) => {
+      expect(dialog.message()).toEqual("Are you sure you want to delete?");
+      await dialog.accept();
+      resolve(); // Resolves the Promise
+    });
+  });
+
+  // 2. Perform the click action. Even if the JS thread gets temporarily frozen,
+  // the listener from step 1 will handle and close the dialog in the background.
+  await page.locator(".nb-trash").first().click();
+
+  // 3. Explicitly wait for confirmation that our custom Promise has been fully resolved
+  await dialogHandled;
+
+  // 4. Verify the final result
+  await expect(page.locator("table tr").first()).not.toHaveText("mdo@gmail.com");
+});
+
+/*
 // s5-ch38 | 38. Dialog Boxes - waitForEvent version (Promise)
+// Doesn't work
+// Deadlock: click() waits for the dialog to close,
+// but dialog.accept() runs only after click() finishes.
+
 test("dialog box with waitForEvent", async ({ page }) => {
   await page.getByText("Tables & Data").click();
   await page.getByText("Smart Table").click();
@@ -210,6 +240,7 @@ test("dialog box with waitForEvent", async ({ page }) => {
   // 5. Verify that the row was successfully removed from the table.
   await expect(page.locator("table tr").first()).not.toHaveText("mdo@gmail.com");
 });
+*/
 
 // s5-ch39 | 39. Web Tables (Part 1)
 test("web tables", async ({ page }) => {
