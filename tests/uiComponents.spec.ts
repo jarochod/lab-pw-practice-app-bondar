@@ -1,17 +1,25 @@
 import { test, expect } from "@playwright/test";
 
+// s8-ch63 | 63. Test Retries
+
 test.beforeEach(async ({ page }) => {
   await page.goto("http://localhost:4200/");
 });
 
-test.describe("Form Layouts page", () => {
+test.describe.only("Form Layouts page", () => {
+  test.describe.configure({retries: 2})
+
   test.beforeEach(async ({ page }) => {
     await page.getByText("Forms").click();
     await page.getByText("Form Layouts").click();
   });
 
   // s5-ch33 | 33. Input Fields
-  test("input fields", async ({ page }) => {
+  test("input fields", async ({ page}, testInfo) => {
+    if (testInfo.retry) {
+      // do something
+      console.log(`To jest powtórzenie testu. Próba numer: ${testInfo.retry}`);
+    }
     // Locate the specific input field using a parent container (nb-card) and role filtering
     const usingTheGridEmailInput = page.locator("nb-card", { hasText: "Using the Grid" })
       .getByRole("textbox", { name: "Email" });
