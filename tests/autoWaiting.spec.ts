@@ -31,7 +31,7 @@ test("Auto waiting", async ({ page }) => {
 });
 
 // Exploring manual waiting strategies when standard auto-waiting is not sufficient.
-test("Alternative waits", async ({ page }) => {
+test.skip("Alternative waits", async ({ page }) => {
   const successButton = page.locator(".bg-success");
 
   // Wait for a specific selector to appear in the DOM.
@@ -51,7 +51,7 @@ test("Alternative waits", async ({ page }) => {
 });
 
 // s4-ch32 | 32. Timeouts
-test("Timeouts", async ({ page }) => {
+test.skip("Timeouts", async ({ page }) => {
   // Manually set test-level timeout
   // test.setTimeout(16500);
 

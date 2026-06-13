@@ -1,13 +1,18 @@
 import { test, expect } from "@playwright/test";
 
 // s8-ch63 | 63. Test Retries
+// s8-ch64 | 64. Parallel Execution
+
+test.describe.configure({ mode: "parallel" });
+
 
 test.beforeEach(async ({ page }) => {
   await page.goto("http://localhost:4200/");
 });
 
-test.describe.only("Form Layouts page", () => {
-  test.describe.configure({retries: 2})
+test.describe("Form Layouts page", () => {
+  test.describe.configure({ retries: 2 });
+  test.describe.configure({ mode: "serial" });
 
   test.beforeEach(async ({ page }) => {
     await page.getByText("Forms").click();
@@ -32,7 +37,7 @@ test.describe.only("Form Layouts page", () => {
 
     // .pressSequentially() simulates real keyboard typing (useful for testing UI reactions/validations)
     // The 'delay' property adds a pause between each keystroke in milliseconds
-    await usingTheGridEmailInput.pressSequentially("test2@test.com", {delay: 200});
+    await usingTheGridEmailInput.pressSequentially("test2@test.com");
 
     // Generic assertion: First, extract the value, then compare it using standard Jest-like syntax
     const inputValue = await usingTheGridEmailInput.inputValue();
