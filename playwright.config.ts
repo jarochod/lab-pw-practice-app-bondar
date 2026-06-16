@@ -48,6 +48,10 @@ export default defineConfig({
 
     // Default timeout for navigation actions (e.g., page.goto)
     navigationTimeout: 16000,
+    video: {
+      mode: "on",
+      size: { width: 1920, height: 1080 },
+    },
   },
 
   /* Configure projects for major browsers */

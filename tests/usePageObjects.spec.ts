@@ -7,6 +7,7 @@ import { faker } from "@faker-js/faker";
 // s6-ch50 | 50. Date Picker Page Object
 // s6-ch51 | 51. Page Objects Manager
 // s8-ch62 | 62. Test Data Generator
+// s8-ch65 | 65. Screenshots and Videos
 
 test.beforeEach(async ({ page }) => {
   // Navigate to the local environment before each test execution
@@ -38,9 +39,13 @@ test("parametrized methods test", async ({ page }) => {
   // High-level abstraction: we focus on "what" we do, not "how"
   await pm.onFormLayoutsPage().submitUsingTheGridFormWithCredentialsAndSelectOptions("test@test.com", "welcome1", "Option 2");
 
+  await page.screenshot({ path: "screenshots/formsLayoutsPage.png" });
+  const buffer = await page.screenshot();
+  console.log(buffer.toString("base64"));
   // Reusing the same logic for different test cases
   await pm.onFormLayoutsPage().submitInlineFormWithNameEmailAndCheckbox(randomFullName, randomEmail, true);
   //await pm.onFormLayoutsPage().submitInlineFormWithNameEmailAndCheckbox("Jan Kowalski", "test@test.com", false);
+  await page.locator("nb-card", { hasText: "Inline form" }).screenshot({ path: "screenshots/inlineForm.png" });
 
   // Reusing methods for different date picker components
   await pm.navigateTo().datepickerPage();
