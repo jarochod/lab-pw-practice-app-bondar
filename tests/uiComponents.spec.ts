@@ -7,7 +7,7 @@ test.describe.configure({ mode: "parallel" });
 
 
 test.beforeEach(async ({ page }) => {
-  await page.goto("http://localhost:4200/");
+  await page.goto("/");
 });
 
 test.describe("Form Layouts page", () => {

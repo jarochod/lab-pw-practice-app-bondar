@@ -11,7 +11,7 @@ import { faker } from "@faker-js/faker";
 
 test.beforeEach(async ({ page }) => {
   // Navigate to the local environment before each test execution
-  await page.goto("http://localhost:4200/");
+  await page.goto("/");
 });
 
 test("navigate to form page", async ({ page }) => {
@@ -37,7 +37,7 @@ test("parametrized methods test", async ({ page }) => {
   await pm.navigateTo().formLayoutsPage();
 
   // High-level abstraction: we focus on "what" we do, not "how"
-  await pm.onFormLayoutsPage().submitUsingTheGridFormWithCredentialsAndSelectOptions("test@test.com", "welcome1", "Option 2");
+  await pm.onFormLayoutsPage().submitUsingTheGridFormWithCredentialsAndSelectOptions(process.env.USERNAME, process.env.PASSWORD, "Option 2");
 
   await page.screenshot({ path: "screenshots/formsLayoutsPage.png" });
   const buffer = await page.screenshot();

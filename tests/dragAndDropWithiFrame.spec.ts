@@ -1,9 +1,12 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { test } from "../test-options"
 
 // s5-ch44 | 44. Drag & Drop with iFrames
-test("drag and drop with iframe", async ({ page }) => {
+// s8-ch66 | 66. Environment Variables
+
+test("drag and drop with iframe", async ({ page, globalsQaURL }) => {
   // Navigate to the drag and drop demo page
-  await page.goto("https://www.globalsqa.com/demo-site/draganddrop/");
+  await page.goto(globalsQaURL);
 
   // Close cookie consent banner if it appears (prevents UI blocking)
   const consentButton = page.locator("button.fc-cta-consent");
@@ -38,9 +41,9 @@ test("drag and drop with iframe", async ({ page }) => {
 });
 
 // s5-ch44 | 44. iFrames | Action: Delete via Trash Icon (Manual steps)
-test("drag and drop with iframe 2", async ({ page }) => {
+test("drag and drop with iframe 2", async ({ page, globalsQaURL }) => {
   // Open demo page
-  await page.goto("https://www.globalsqa.com/demo-site/draganddrop/");
+  await page.goto(globalsQaURL);
 
   // Close cookie consent banner if it appears (prevents UI blocking)
   const consentButton = page.locator("button.fc-cta-consent");
@@ -71,9 +74,9 @@ test("drag and drop with iframe 2", async ({ page }) => {
 });
 
 // s5-ch44 | 44. iFrames | Action: Delete via Trash Icon (Refactored with Helper)
-test("drag and drop with iframe 3", async ({ page }) => {
+test("drag and drop with iframe 3", async ({ page, globalsQaURL }) => {
   // Open demo page
-  await page.goto("https://www.globalsqa.com/demo-site/draganddrop/");
+  await page.goto(globalsQaURL);
 
   // Close cookie consent banner if it appears (prevents UI blocking)
   const consentButton = page.locator("button.fc-cta-consent");
