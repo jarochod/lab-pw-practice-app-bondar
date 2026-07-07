@@ -2,30 +2,36 @@ import { test as base } from "@playwright/test";
 import { PageManager } from "./page-objects/pageManager";
 
 // s8-ch66 | 66. Environment Variables
-// s8-ch68 | 68. Fixtures
+// s8-ch68 | Fixtures
+// refactor: s8-ch68 | 68. Fixtures - custom generic approach complying with DRY and POM
 
+// Definition of extended test options and fixture types
 export type TestOptions = {
   globalsQaURL: string;
+  homePage: string;
+  pm: PageManager;
   formLayoutsPage: string;
-  pageManager: PageManager;
 };
 
 export const test = base.extend<TestOptions>({
+  // s8-ch66 | Environment Variables property
   globalsQaURL: ["", { option: true }],
 
-  formLayoutsPage: async ({ page }, use) => {
-    console.log("Setup formLayoutsPage")
+  // Lifecycle fixture replacing global beforeEach hooks
+  homePage: async ({ page }, use) => {
     await page.goto("/");
-    await page.getByText("Forms").click();
-    await page.getByText("Form Layouts").click();
     await use("");
-    console.log("Teardown formLayoutsPage");
   },
 
-  pageManager: async ({ page, formLayoutsPage }, use) => {
-    console.log("Setup pageManager")
+  // Centralized PageManager instance dependent on homePage
+  pm: async ({ page, homePage }, use) => {
     const pm = new PageManager(page);
     await use(pm);
-    console.log("Teardown pageManager");
+  },
+
+  // Enhanced fixture reusing POM logic instead of hardcoded selectors
+  formLayoutsPage: async ({ pm }, use) => {
+    await pm.navigateTo().formLayoutsPage();
+    await use("");
   },
 });
