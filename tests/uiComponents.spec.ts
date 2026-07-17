@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
-test.describe("Form Layouts page", () => {
+test.describe("Form Layouts page @lock", () => {
   test.describe.configure({ retries: 2 });
   test.describe.configure({ mode: "serial" });
 

@@ -14,7 +14,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto("/");
 });
 
-test("navigate to form page", async ({ page }) => {
+test("navigate to form page @smoke @regresion", async ({ page }) => {
   // Create a new instance of NavigationPage
   const pm = new PageManager(page);
   // Execute the navigation method
@@ -25,7 +25,7 @@ test("navigate to form page", async ({ page }) => {
   await pm.navigateTo().tooltipPage();
 });
 
-test("parametrized methods test", async ({ page }) => {
+test("parametrized methods test @smoke", async ({ page }) => {
   const pm = new PageManager(page);
 
   // Generate random full name using Faker library
