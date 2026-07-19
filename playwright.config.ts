@@ -3,6 +3,7 @@ import type { TestOptions } from './test-options';
 
 // s8-ch66 | 66. Environment Variables
 // s8-ch67 | 67. Configuration File
+// s8-ch72 | 72. Mobile Device Emulator
 
 require('dotenv').config();
 
@@ -62,6 +63,14 @@ export default defineConfig<TestOptions>({
       use: {
         viewport: { width: 1920, height: 1080 }
       }
-    }
+    },
+    {
+      name: 'mobile',
+      testMatch: 'testMobile.spec.ts', // File filter
+      use: {
+        ...devices['Pixel 7'], // Device profile
+        // Alternatively: viewport: { width: 412, height: 915 }
+      },
+    },
   ]
 });
