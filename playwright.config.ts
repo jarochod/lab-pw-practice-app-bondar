@@ -4,6 +4,7 @@ import type { TestOptions } from './test-options';
 // s8-ch66 | 66. Environment Variables
 // s8-ch67 | 67. Configuration File
 // s8-ch72 | 72. Mobile Device Emulator
+// s8-ch73 | 73. Reporting
 
 require('dotenv').config();
 
@@ -15,7 +16,14 @@ export default defineConfig<TestOptions>({
     timeout: 20000
   },
   retries: 1,
-  reporter: 'html',
+  // reporter: 'html',
+  reporter: [
+    ['html'],
+    ['line'],
+    ['json', {outputFile: 'test-results/jsonReport.json'}],
+    ['junit', {outputFile: 'test-results/junitReport.xml'}],
+    ['allure-playwright']
+  ],
 
   // --- Default configuration for all tests ---
   use: {
