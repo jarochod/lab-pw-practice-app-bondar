@@ -13,16 +13,17 @@ export default defineConfig<TestOptions>({
   timeout: 40000,
   globalTimeout: 60000,
   expect: {
-    timeout: 20000
+    timeout: 20000,
+    toMatchSnapshot: {maxDiffPixels: 50}
   },
   retries: 1,
   // reporter: 'html',
   reporter: [
     ['html'],
-    ['line'],
+    // ['line'],
     ['json', {outputFile: 'test-results/jsonReport.json'}],
     ['junit', {outputFile: 'test-results/junitReport.xml'}],
-    ['allure-playwright']
+    // ['allure-playwright']
   ],
 
   // --- Default configuration for all tests ---
@@ -49,7 +50,7 @@ export default defineConfig<TestOptions>({
       name: 'dev',
       use: {
         ...devices['Desktop Chrome'],
-        baseURL: 'http://localhost:4201/'
+        baseURL: 'http://localhost:4200/'
       },
     },
     {

@@ -11,7 +11,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test.describe("Form Layouts page @lock", () => {
-  test.describe.configure({ retries: 2 });
+  test.describe.configure({ retries: 0 });
   test.describe.configure({ mode: "serial" });
 
   test.beforeEach(async ({ page }) => {
@@ -49,7 +49,8 @@ test.describe("Form Layouts page @lock", () => {
   });
 
   // s5-ch34 | 34. Radio Buttons
-  test("radio buttons", async ({ page }) => {
+  // s8-ch74 | 74. Visual Testing
+  test.only("radio buttons", async ({ page }) => {
     const usingTheGridForm = page.locator("nb-card", {hasText: "Using the Grid"});
 
     // Use .check() to select a radio button.
@@ -57,6 +58,9 @@ test.describe("Form Layouts page @lock", () => {
     // the actual <input> element. Playwright won't click it otherwise.
     await usingTheGridForm.getByRole("radio", { name: "Option 1" }).check({ force: true });
 
+    // Visual Testing
+    await expect(usingTheGridForm).toHaveScreenshot({maxDiffPixels: 100})
+  /* Test isolation for Visual Testing
     // Generic assertion: Manual check of the state using .isChecked()
     const radioStatus = await usingTheGridForm.getByRole("radio", { name: "Option 1" }).isChecked();
     expect(radioStatus).toBeTruthy();
@@ -70,6 +74,7 @@ test.describe("Form Layouts page @lock", () => {
     // Verifying the state after change: Option 1 should now be false, Option 2 should be true
     expect(await usingTheGridForm.getByRole("radio", { name: "Option 1" }).isChecked()).toBeFalsy();
     expect(await usingTheGridForm.getByRole("radio", { name: "Option 2" }).isChecked()).toBeTruthy();
+  */
   });
 });
 
