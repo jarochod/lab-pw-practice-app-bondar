@@ -52,3 +52,12 @@ test("parametrized methods test @smoke", async ({ page }) => {
   await pm.onDatepickerPage().selectCommonDatePickerDateFromToday(5);
   await pm.onDatepickerPage().selectDatepickerWithRangeFromToday(5,8);
 });
+
+//s8-ch76 | 76. GitHub Actions and Argos CI
+test.only("testing with argos ci", async ({ page }) => {
+  // Create a new instance of NavigationPage
+  const pm = new PageManager(page);
+  // Execute the navigation method
+  await pm.navigateTo().formLayoutsPage();
+  await pm.navigateTo().datepickerPage();
+});
