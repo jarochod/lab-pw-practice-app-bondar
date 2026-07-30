@@ -40,8 +40,8 @@ test("parametrized methods test @smoke", async ({ page }) => {
   await pm.onFormLayoutsPage().submitUsingTheGridFormWithCredentialsAndSelectOptions(process.env.USERNAME, process.env.PASSWORD, "Option 2");
 
   await page.screenshot({ path: "screenshots/formsLayoutsPage.png" });
-  const buffer = await page.screenshot();
-  console.log(buffer.toString("base64"));
+  //const buffer = await page.screenshot();
+  //console.log(buffer.toString("base64"));
   // Reusing the same logic for different test cases
   await pm.onFormLayoutsPage().submitInlineFormWithNameEmailAndCheckbox(randomFullName, randomEmail, true);
   //await pm.onFormLayoutsPage().submitInlineFormWithNameEmailAndCheckbox("Jan Kowalski", "test@test.com", false);
